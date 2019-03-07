@@ -771,8 +771,6 @@ bool UsbCam::grab_image(sensor_msgs::Image *msg, int timeout, bool trigger_inter
     return false;
   }
 
-  static uint32_t seq = 0;
-
   // stamp the image
   msg->header.stamp.sec = image_->tv_sec;
   msg->header.stamp.nsec = 1000 * image_->tv_usec;
@@ -820,16 +818,15 @@ bool UsbCam::grab_image(int timeout, bool trigger_internal_) {
     errno_exit("select error.");
   }
 
-  static int i = 0;
   if (0 == r) {
     ROS_WARN_STREAM("camera is offline:" << camera_dev_);
     // reset usb when camera timeout
     // reset_device();
     // exit(EXIT_FAILURE); // disable exit in timeout 20181031
 #if 1
-    i++;
-    if (i >= 2) { // if can not capture data 3 times continue
-      static int camera_restart_count = 0;
+    lost_count++;
+    if (lost_count >= 2) { // if can not capture data 3 times continue
+
       struct timeval time;
       struct tm localtime;    // localtime
       char strTime[64];
@@ -841,13 +838,13 @@ bool UsbCam::grab_image(int timeout, bool trigger_internal_) {
       ROS_ERROR_STREAM("["<< strTime << "] " << "[" << camera_dev_ << "] camera try restart " << camera_restart_count++ << "th times");
       set_trigger_mode(!trigger_internal_);
       set_trigger_mode(trigger_internal_);
-      i = 0;
+      lost_count = 0;
     }
 #endif
     return false;
   }
   else {
-    i = 0;
+    lost_count = 0;
   }
 
   int get_new_image = read_frame();

@@ -301,11 +301,10 @@ bool UsbCamWrapper::spin()
 ///***************************load local image******************************///
 void UsbCamWrapper::SendImage(cv::Mat mat, double timestamp)
 {
-  static int seq = 0;
 sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", mat).toImageMsg();
   msg->header.stamp.sec = (long)timestamp;
   msg->header.stamp.nsec = (timestamp - (long)timestamp)*1e9;
-  msg->header.seq = seq++;
+  msg->header.seq = seq;
 
   image_pub_plugin_->publish(msg);
 
@@ -313,17 +312,26 @@ sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", mat).
 
 void UsbCamWrapper::GetLocalImageAndSend()
 {
-  static int i = 0;
-  if(i >= file_names_.size()) {
+  struct timeval tv1, tv2;
+  gettimeofday(&tv1, NULL);
+  if(seq >= file_names_.size()) {
     ROS_ERROR_STREAM("read image finish");
     // exit(0);
-    i = 0;
+    seq = 0;
   }
-  cv::Mat mat = cv::imread(file_names_[i]);
-  SendImage(mat, string2time_t(file_names_[i]));
-  i++;
+  cv::Mat mat = cv::imread(file_names_[seq]);
+  SendImage(mat, string2time_t(file_names_[seq]));
+  seq++;
+  gettimeofday(&tv2, NULL);
+  long time_cost = tv2.tv_sec * 1000 + tv2.tv_usec / 1000 -
+            tv1.tv_sec * 1000 - tv1.tv_usec / 1000;
+  time_cost = 1000 / framerate_ - time_cost;
+  time_cost = time_cost > 0 ? time_cost : 1;
+  time_cost = time_cost > (1000 / framerate_) ? 1 : time_cost;
+  usleep(time_cost*1000);
 
-  usleep(100*1000);
+
+  // usleep(1000);
 }
 
 bool UsbCamWrapper::GetFileNames(std::string path,std::vector<std::string> &filenames)

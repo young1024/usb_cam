@@ -94,6 +94,9 @@ class UsbCamWrapper {
   float frame_drop_interval_;
   float spin_interval_;
   int error_code_;
+
+  int seq = 0;
+  double timestamp_last = 0;
 };
 }
 

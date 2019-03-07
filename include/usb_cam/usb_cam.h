@@ -168,6 +168,11 @@ class UsbCam {
   int avframe_rgb_size_;
   struct SwsContext *video_sws_;
   boost::shared_ptr<CameraImage> image_;
+
+  int camera_restart_count = 0;
+  int lost_count = 0;
+  uint32_t seq = 0;
+
 };
 }
 
