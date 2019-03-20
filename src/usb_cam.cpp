@@ -727,7 +727,7 @@ void UsbCam::start(const std::string &dev, io_method io_method,
     exit(EXIT_FAILURE);
   }
 
-  bind_device(v4l_bind_id_);
+  // bind_device(v4l_bind_id_);
 
   open_device();
   init_device(image_width, image_height, framerate);

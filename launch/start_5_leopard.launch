@@ -5,7 +5,7 @@
   <arg name="front_right_25mm_obstacle_topic_name" default="/apollo/sensor/camera/obstacle/front_right_25mm" />
   <arg name="front_12mm_traffic_topic_name" default="/apollo/sensor/camera/traffic/front_12mm" />
   <arg name="frame_rate" default="10"/>
-  <arg name="trigger_internal" default="0" />
+  <arg name="trigger_internal" default="1" />
   <arg name="trigger_fps" default="10" />
   <arg name="flag_load_image" default="0" />
 
@@ -14,7 +14,7 @@
 
     <node pkg="nodelet" type="nodelet" name="sensor_camera_front_left_6mm" output="screen"
           args="load usb_cam/UsbCamNodelet camera_nodelet_manager" respawn="true" >
-      <param name="video_device" value="/dev/video0" />
+      <param name="video_device" value="/dev/v4l/by-id/usb-Leopard_Imaging_AR023Z_1_0000100001-video-index0" />
     	<param name="image_width" value="1920" />
     	<param name="image_height" value="1080" />
     	<param name="pixel_format" value="yuyv" />
@@ -39,7 +39,7 @@
 
     <node pkg="nodelet" type="nodelet" name="sensor_camera_front_right_6mm" output="screen"
           args="load usb_cam/UsbCamNodelet camera_nodelet_manager" respawn="true" >
-      <param name="video_device" value="/dev/video1" />
+      <param name="video_device" value="/dev/v4l/by-id/usb-Leopard_Imaging_AR023Z_2_0000100002-video-index0" />
     	<param name="image_width" value="1920" />
     	<param name="image_height" value="1080" />
     	<param name="pixel_format" value="yuyv" />
@@ -64,7 +64,7 @@
 
     <node pkg="nodelet" type="nodelet" name="sensor_camera_front_left_25mm" output="screen"
           args="load usb_cam/UsbCamNodelet camera_nodelet_manager" respawn="true" >
-      <param name="video_device" value="/dev/video2" />
+      <param name="video_device" value="/dev/v4l/by-id/usb-Leopard_Imaging_AR023Z_3_0000100003-video-index0" />
     	<param name="image_width" value="1920" />
     	<param name="image_height" value="1080" />
     	<param name="pixel_format" value="yuyv" />
@@ -89,7 +89,7 @@
 
     <node pkg="nodelet" type="nodelet" name="sensor_camera_front_right_25mm" output="screen"
           args="load usb_cam/UsbCamNodelet camera_nodelet_manager" respawn="true" >
-      <param name="video_device" value="/dev/video3" />
+      <param name="video_device" value="/dev/v4l/by-id/usb-Leopard_Imaging_AR023Z_4_0000100004-video-index0" />
     	<param name="image_width" value="1920" />
     	<param name="image_height" value="1080" />
     	<param name="pixel_format" value="yuyv" />
@@ -114,11 +114,11 @@
 
     <node pkg="nodelet" type="nodelet" name="sensor_camera_front_12mm" output="screen"
           args="load usb_cam/UsbCamNodelet camera_nodelet_manager" respawn="true" >
-      <param name="video_device" value="/dev/video4" />
+      <param name="video_device" value="/dev/v4l/by-id/usb-Leopard_Imaging_AR023Z_7_0000100007-video-index0" />
     	<param name="image_width" value="1920" />
     	<param name="image_height" value="1080" />
     	<param name="pixel_format" value="yuyv" />
-      <param name="v4l_bind_id" type="string" value="2" />
+      <param name="v4l_bind_id" type="string" value="5" />
       <param name="frame_rate" value="$(arg frame_rate)" />
     	<param name="camera_frame_id" value="usb_cam" />
     	<param name="io_method" value="mmap"/>
